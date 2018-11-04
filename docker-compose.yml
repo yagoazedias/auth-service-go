@@ -1,0 +1,15 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres_shorter
+    image: "mdillon/postgis"
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_DB: shorter
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  redis:
+    container_name: redis_shorter
+    image: "redis:alpine"
