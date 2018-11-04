@@ -4,7 +4,7 @@ import "fmt"
 
 // Postgres  defines the parameters needed to connect to a Postgres database
 type Postgres struct {
-	Host     string `envconfig:"default=127.0.0.1"`
+	Host     string `envconfig:"default=localhost"`
 	Port     int    `envconfig:"default=5432"`
 	Username string `envconfig:"default=postgres"`
 	Password string `envconfig:"default=postgres"`
@@ -16,9 +16,19 @@ type Postgres struct {
 
 // ConnectionString returns the connection string for a postgres database
 func (p Postgres) ConnectionString() string {
+
+	env := Postgres{Host: "localhost",
+		Port: 5432,
+		Username: "postgres",
+		Password: "postgres",
+		Name: "shorter",
+		MaxOpenConns: 20,
+		LogMode: false,
+	}
+
 	return fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		p.Host, p.Port, p.Username, p.Password, p.Name,
+		env.Host, env.Port, env.Username, env.Password, env.Name,
 	)
 }
 
