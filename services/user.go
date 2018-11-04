@@ -7,5 +7,5 @@ import (
 type User struct {}
 
 func (u *User) Create() (*model.User, error) {
-	
+
 }
