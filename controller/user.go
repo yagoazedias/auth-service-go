@@ -14,7 +14,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		user model.User
-		validator common.User
+		common common.User
 	)
 
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -24,7 +24,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isValid, invalidation := validator.Validate(user)
+	isValid, invalidation := common.Validate(user)
 
 	if !isValid {
 		w.Header().Set("Content-Type", "application/json")

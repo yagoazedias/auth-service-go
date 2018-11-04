@@ -18,3 +18,10 @@ func (v User) Validate(user model.User) (bool, Invalidation) {
 	}
 	return true, Invalidation{}
 }
+
+func (v User) Shorten(user *model.User) *model.User {
+	user.Password  = ""
+	user.DeletedAt = nil
+
+	return user
+}

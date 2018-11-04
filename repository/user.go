@@ -12,10 +12,9 @@ type User struct {}
 func (u User) CreateUser(user model.User) (*model.User, error) {
 
 	env := environment.Postgres{}
-
 	fmt.Printf(env.ConnectionString())
-
 	MustOpen(env.ConnectionString(), false)
+	defer db.Close()
 
 	if result := db.Create(&user); result.Error != nil {
 		return nil, errors.Wrap(result.Error, "could not create user")
