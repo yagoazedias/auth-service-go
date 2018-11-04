@@ -5,16 +5,18 @@ import (
 	"github.com/yagoazedias/rest-api/model"
 	"encoding/json"
 	"github.com/yagoazedias/rest-api/services"
+	"github.com/yagoazedias/rest-api/common"
 )
-
-type ErrorResponse struct {
-	Message  string
-	ErrorMsg string
-}
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
-	var user model.User
+	w.Header().Set("Content-Type", "application/json")
+
+	var (
+		user model.User
+		validator common.User
+	)
+
 	err := json.NewDecoder(r.Body).Decode(&user)
 
 	if err != nil {
@@ -22,11 +24,19 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userService := services.User{}
+	isValid, invalidation := validator.Validate(user)
 
+	if !isValid {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(invalidation)
+		return
+	}
+
+	userService := services.User{}
 	newUser, err := userService.Create(user)
 
-	if err != nil {
+	if err != nil  {
 		http.Error(w, err.Error(), 400)
 		return
 	}

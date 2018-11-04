@@ -8,6 +8,7 @@ import (
 type User struct {}
 
 func (u *User) Create(user model.User) (*model.User, error) {
+
 	var (
 		err error
 		newUser *model.User
