@@ -9,20 +9,18 @@ import (
 
 type User struct{}
 
+type UserView struct{}
+
 func (u *User) Create(user model.User) (*model.User, error) {
 
-	var (
-		err     error
-		newUser *model.User
-		common  common.User
-	)
+	var common common.User
 
 	userRepository := repository.User{}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 
-	newUser, err = userRepository.CreateUser(user)
+	newUser, err := userRepository.CreateUser(user)
 
 	if err != nil {
 		return nil, err
@@ -31,9 +29,9 @@ func (u *User) Create(user model.User) (*model.User, error) {
 	return common.Shorten(newUser), nil
 }
 
-func (u *User) GetUsers() ([]model.User, error) {
+func (u *UserView) GetUsers() ([]model.UserView, error) {
 
-	userRepository := repository.User{}
+	userRepository := repository.UserView{}
 
 	users, err := userRepository.GetUsers()
 

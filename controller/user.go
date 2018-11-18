@@ -47,7 +47,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var userService = services.User{}
+	var userService = services.UserView{}
 
 	users, err := userService.GetUsers()
 

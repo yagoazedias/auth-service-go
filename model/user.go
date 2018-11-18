@@ -10,3 +10,18 @@ type User struct {
 	Email    string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
 }
+
+type UserView struct {
+	gorm.Model
+	Name     string `json:"name,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Password string `json:"password,omitempty"`
+}
+
+func (UserView) TableName() string {
+	return "user_view"
+}
+
+func (User) TableName() string {
+	return "user"
+}

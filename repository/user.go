@@ -8,6 +8,7 @@ import (
 )
 
 type User struct{}
+type UserView struct{}
 
 func (u User) CreateUser(user model.User) (*model.User, error) {
 
@@ -23,9 +24,9 @@ func (u User) CreateUser(user model.User) (*model.User, error) {
 	return &user, nil
 }
 
-func (u User) GetUsers() ([]model.User, error) {
+func (u UserView) GetUsers() ([]model.UserView, error) {
 
-	var users []model.User
+	var users []model.UserView
 	env := environment.Postgres{}
 	fmt.Printf(env.ConnectionString())
 	MustOpen(env.ConnectionString(), false)
