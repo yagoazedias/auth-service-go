@@ -1,20 +1,20 @@
 package services
 
 import (
+	"github.com/yagoazedias/rest-api/common"
 	"github.com/yagoazedias/rest-api/model"
 	"github.com/yagoazedias/rest-api/repository"
 	"golang.org/x/crypto/bcrypt"
-	"github.com/yagoazedias/rest-api/common"
 )
 
-type User struct {}
+type User struct{}
 
 func (u *User) Create(user model.User) (*model.User, error) {
 
 	var (
-		err error
+		err     error
 		newUser *model.User
-		common common.User
+		common  common.User
 	)
 
 	userRepository := repository.User{}
@@ -29,4 +29,17 @@ func (u *User) Create(user model.User) (*model.User, error) {
 	}
 
 	return common.Shorten(newUser), nil
+}
+
+func (u *User) GetUsers() ([]model.User, error) {
+
+	userRepository := repository.User{}
+
+	users, err := userRepository.GetUsers()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }

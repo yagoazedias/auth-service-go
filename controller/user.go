@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"net/http"
-	"github.com/yagoazedias/rest-api/model"
 	"encoding/json"
-	"github.com/yagoazedias/rest-api/services"
 	"github.com/yagoazedias/rest-api/common"
+	"github.com/yagoazedias/rest-api/model"
+	"github.com/yagoazedias/rest-api/services"
+	"net/http"
 )
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +13,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var (
-		user model.User
+		user   model.User
 		common common.User
 	)
 
@@ -36,7 +36,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	userService := services.User{}
 	newUser, err := userService.Create(user)
 
-	if err != nil  {
+	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
@@ -44,5 +44,21 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newUser)
 }
 
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var userService = services.User{}
+
+	users, err := userService.GetUsers()
+
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	json.NewEncoder(w).Encode(users)
+}
+
 func GetUser(w http.ResponseWriter, r *http.Request) {}
+
 func DeleteUser(w http.ResponseWriter, r *http.Request) {}

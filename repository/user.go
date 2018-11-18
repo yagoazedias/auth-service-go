@@ -1,13 +1,13 @@
 package repository
 
 import (
-	"github.com/yagoazedias/rest-api/model"
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/yagoazedias/rest-api/environment"
-	"fmt"
+	"github.com/yagoazedias/rest-api/model"
 )
 
-type User struct {}
+type User struct{}
 
 func (u User) CreateUser(user model.User) (*model.User, error) {
 
@@ -21,4 +21,19 @@ func (u User) CreateUser(user model.User) (*model.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (u User) GetUsers() ([]model.User, error) {
+
+	var users []model.User
+	env := environment.Postgres{}
+	fmt.Printf(env.ConnectionString())
+	MustOpen(env.ConnectionString(), false)
+	defer db.Close()
+
+	if result := db.Find(&users); result.Error != nil {
+		return nil, errors.Wrap(result.Error, "could not find users")
+	}
+
+	return users, nil
 }
