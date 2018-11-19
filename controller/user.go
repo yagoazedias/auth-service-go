@@ -62,3 +62,20 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 func GetUser(w http.ResponseWriter, r *http.Request) {}
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {}
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	email, pass, _ := r.BasicAuth()
+	userService := services.User{}
+
+	token, err := userService.Login(email, pass)
+
+	if err != nil {
+		w.WriteHeader(401)
+		json.NewEncoder(w).Encode("Email or password does not match")
+		return
+	}
+
+	json.NewEncoder(w).Encode(common.JwtToken{Token: token})
+}

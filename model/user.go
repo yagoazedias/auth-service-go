@@ -23,5 +23,5 @@ func (UserView) TableName() string {
 }
 
 func (User) TableName() string {
-	return "user"
+	return "users"
 }
