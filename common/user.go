@@ -12,6 +12,10 @@ type JwtToken struct {
 	Token string `json:"token"`
 }
 
+	type Exception struct {
+	Message string `json:"message"`
+}
+
 func (v User) Validate(user model.User) (bool, Invalidation) {
 	if user.Email == "" {
 		return false, Invalidation{"Invalidation: email is a required field"}

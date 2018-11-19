@@ -6,6 +6,7 @@ import (
 	"github.com/yagoazedias/rest-api/model"
 	"github.com/yagoazedias/rest-api/services"
 	"net/http"
+	"strings"
 )
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -46,6 +47,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	tokenString := strings.Split(r.Header.Get("Authorization"), " ")[1]
+	authService := services.Auth{}
+
+	ok, isTokenValid := authService.ValidateJwt(tokenString)
+
+	if !ok || !isTokenValid {
+		json.NewEncoder(w).Encode(common.Exception{ Message: "Invalid authorization token" })
+		return
+	}
 
 	var userService = services.UserView{}
 
