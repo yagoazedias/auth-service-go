@@ -7,7 +7,29 @@ import (
 	"github.com/yagoazedias/rest-api/services"
 	"net/http"
 	"strings"
+	"github.com/pkg/errors"
 )
+
+type Error interface {
+	error
+	Status() int
+}
+
+// StatusError represents an error with an associated HTTP status code.
+type StatusError struct {
+	Code int
+	Err  error
+}
+
+// Allows StatusError to satisfy the error interface.
+func (se StatusError) Error() string {
+	return se.Err.Error()
+}
+
+// Returns our HTTP status code.
+func (se StatusError) Status() int {
+	return se.Code
+}
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
@@ -48,13 +70,21 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+
+	if len(r.Header.Get("Authorization")) == 0 {
+		http.Error(w, "", 403)
+		json.NewEncoder(w).Encode(StatusError{403, errors.New("No authentication token provided")})
+		return
+	}
+
 	tokenString := strings.Split(r.Header.Get("Authorization"), " ")[1]
 	authService := services.Auth{}
 
 	ok, isTokenValid := authService.ValidateJwt(tokenString)
 
 	if !ok || !isTokenValid {
-		json.NewEncoder(w).Encode(common.Exception{ Message: "Invalid authorization token" })
+		http.Error(w, "", 401)
+		json.NewEncoder(w).Encode(StatusError{401, errors.New("Invalid authorization token")})
 		return
 	}
 
@@ -63,7 +93,8 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := userService.GetUsers()
 
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		http.Error(w, "", 500)
+		json.NewEncoder(w).Encode(StatusError{500, errors.New(err.Error())})
 		return
 	}
 
